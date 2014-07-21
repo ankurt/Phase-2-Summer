@@ -43,3 +43,12 @@ end
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
+
+group :test do
+  gem 'factory_girl_rails'
+  gem 'shoulda'
+  gem 'shoulda-matchers'
+  gem 'simplecov'
+  gem 'turn'
+  gem 'single_test'
+end
