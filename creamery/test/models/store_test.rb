@@ -4,6 +4,7 @@ class StoreTest < ActiveSupport::TestCase
 
   # testing relationships
   should have_many(:assignments)
+  should have_many(:employees).through(:assignments)
 
   # testing validations
 
@@ -34,6 +35,9 @@ class StoreTest < ActiveSupport::TestCase
   # phone
   should allow_value('123-456-7890').for(:phone)
   should allow_value('1231231234').for(:phone)
+  should allow_value('123 123-1234').for(:phone)
+  should allow_value('123 1231234').for(:phone)
+  should allow_value('123 456-7890').for(:phone)
   should_not allow_value('12312312345').for(:phone)
   should_not allow_value('123 asd 1234').for(:phone)
   should_not allow_value('12-2345-1234').for(:phone)
@@ -68,7 +72,7 @@ class StoreTest < ActiveSupport::TestCase
 
 	    # alphabetical
 	    should "alphabetize names of stores" do
-	      assert_equal ['A Store', 'A&B Store', 'All Attributes', 'Another Store', 'Grand Store', 'MyString', 'MyString', 'Silicon Valley Store', 'Very Nice Store', 'Z Store'], Store.alphabetical.map(&:name)
+	      assert_equal ['A Store', 'A&B Store', 'All Attributes', 'Another Store', 'Grand Store', 'Silicon Valley Store', 'Very Nice Store', 'Z Store'], Store.alphabetical.map(&:name)
 	    end
 
 	    # active
@@ -78,7 +82,7 @@ class StoreTest < ActiveSupport::TestCase
 
 	    # testing active scope
 	    should "have a scope to find all inactive stores" do
-	      assert_equal ["MyString", "MyString", "Another Store", "Very Nice Store"], Store.inactive.map(&:name)
+	      assert_equal ["Another Store", "Very Nice Store"], Store.inactive.map(&:name)
 	    end
 
 	end
