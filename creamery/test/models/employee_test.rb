@@ -19,5 +19,15 @@ class EmployeeTest < ActiveSupport::TestCase
 	should_not allow_value('abcdefghi').for(:ssn)
 	should_not allow_value('abc-de-fghi').for(:ssn)
 
+  	# phone
+	should allow_value('123-456-7890').for(:phone)
+	should allow_value('1231231234').for(:phone)
+	should allow_value('123 123-1234').for(:phone)
+	should allow_value('123 1231234').for(:phone)
+	should allow_value('123 456-7890').for(:phone)
+	should_not allow_value('12312312345').for(:phone)
+	should_not allow_value('123 asd 1234').for(:phone)
+	should_not allow_value('12-2345-1234').for(:phone)
+	should_not allow_value('213-123-213').for(:phone)
 
 end
