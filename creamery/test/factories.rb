@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  # factory blueprint for curriculum
+  # factory blueprint for store
   factory :store do
     name "A&B Store"
     city "Monroe"
@@ -8,15 +8,16 @@ FactoryGirl.define do
     active true
   end
 
- #  # factory blueprint for camp
- #  factory :camp do
- #  	association :curriculum
- #    curriculum_id 1
- #    cost 0
- #    start_date Date.today
- #    time_slot "AM"
- #    active true
- #  end
+  # factory blueprint for employee
+  factory :employee do
+    first_name 'Ankur'
+    last_name 'Toshniwal'
+    ssn '111-12-1234'
+    phone '111-222-3334'
+    role 'employee'
+    date_of_birth '27/04/1994'
+    active true
+  end
 
  #  # factory blueprint for instructor
  #  factory :instructor do

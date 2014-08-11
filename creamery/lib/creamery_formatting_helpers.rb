@@ -1,4 +1,4 @@
-module FormattingHelpers
+module CreameryFormattingHelpers
 
   # Since reformatting phone is used by multiple models (instructor, family),
   # we can pull it out here and call it whenever needed

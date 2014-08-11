@@ -85,6 +85,10 @@ class StoreTest < ActiveSupport::TestCase
 	      assert_equal ["Another Store", "Very Nice Store"], Store.inactive.map(&:name)
 	    end
 
+        should "reformat phone numbers" do
+            assert_equal "6092165609", Store.first.phone(&:phone)
+        end
+
 	end
 
 

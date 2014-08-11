@@ -1,5 +1,5 @@
 class Store < ActiveRecord::Base
-	include FormattingHelpers
+	# include CreameryFormattingHelpers
 
     before_save :reformat_phone
 
@@ -18,5 +18,8 @@ class Store < ActiveRecord::Base
 	scope :alphabetical, -> { order('name') }
 	scope :active, -> { where(active: true) }
 	scope :inactive, -> { where(active: false) }
-
+    
+    def reformat_phone
+      self.phone = self.phone.to_s.gsub(/[^0-9]/,"")
+    end
 end
