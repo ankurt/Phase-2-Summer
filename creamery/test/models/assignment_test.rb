@@ -35,98 +35,81 @@ class AssignmentTest < ActiveSupport::TestCase
 
     context "Creating a store context" do
         setup do 
+          @store1 = FactoryGirl.create(:store, name: "Silicon Valley Store")
+          @store2 = FactoryGirl.create(:store, name: "Grand Store")
+          @store3 = FactoryGirl.create(:store, name: "Another Store", active: false)
+          @store4 = FactoryGirl.create(:store, name: "Very Nice Store", active: false)
+          @store5 = FactoryGirl.create(:store, name: "Z Store")
+          @store6 = FactoryGirl.create(:store, name: "A Store")
+          @employee1 = FactoryGirl.create(:employee)
+          @employee2 = FactoryGirl.create(:employee)
+          @employee3 = FactoryGirl.create(:employee)
+          @employee4 = FactoryGirl.create(:employee)
+          @employee5 = FactoryGirl.create(:employee)
+          @employee6 = FactoryGirl.create(:employee)
           @assignment = FactoryGirl.create(:assignment)
-          @assignment1 = FactoryGirl.create(:assignment, last_name: "Anita", date_of_birth: "20/01/1990", role: 'manager')
-          @assignment2 = FactoryGirl.create(:assignment, last_name: "Grand Store", date_of_birth: "20/01/2000", role: 'manager')
-          @assignment3 = FactoryGirl.create(:assignment, last_name: "Another Store", date_of_birth: "20/08/1999", role: 'admin', active: false)
-          @assignment4 = FactoryGirl.create(:assignment, last_name: "Very Nice Store", active: false, role: 'admin', date_of_birth: "20/01/1998")
-          @assignment5 = FactoryGirl.create(:assignment, last_name: "Z Store")
-          @assignment6 = FactoryGirl.create(:assignment, last_name: "A Store")
-          @assignment7 = FactoryGirl.create(:assignment, last_name: "All Attributes", phone: '609-216-5609')
+          @assignment2 = FactoryGirl.create(:assignment, store_id: @store1.id, employee_id: @employee1.id, start_date: "20/01/2000", end_date: "15/02/2002", pay_level: 3)
+          @assignment3 = FactoryGirl.create(:assignment, store_id: @store2.id, employee_id: @employee2.id, start_date: "20/08/1999", pay_level: 4)
+          @assignment4 = FactoryGirl.create(:assignment, store_id: @store3.id, employee_id: @employee3.id, start_date: "20/01/1998", pay_level: 4)
+          @assignment5 = FactoryGirl.create(:assignment, store_id: @store4.id, employee_id: @employee4.id, end_date: "10/05/2017", pay_level: 4)
+          @assignment6 = FactoryGirl.create(:assignment, store_id: @store4.id, employee_id: @employee4.id, start_date: "25/01/2020", pay_level: 6 )
+          @assignment7 = FactoryGirl.create(:assignment, store_id: @store6.id, employee_id: @employee6.id)
+          @assignment8 = FactoryGirl.create(:assignment, store_id: @store5.id, employee_id: @employee6.id, start_date: "27/01/2017")
         end
         
         teardown do
+          @store1
+          @store2
+          @store3
+          @store4
+          @store5
+          @store6
+          @employee1
+          @employee2
+          @employee3
+          @employee4
+          @employee5
+          @employee6
           @assignment
-          @assignment1
           @assignment2
           @assignment3
           @assignment4
           @assignment5
           @assignment6
           @assignment7
+          @assignment8
         end
 
         # testing scopes
 
-        # alphabetical
-        should "alphabetize names of stores" do
-          assert_equal ["A Store", "All Attributes", "Anita", "Another Store", "Grand Store", "Toshniwal", "Very Nice Store", "Z Store"], Employee.alphabetical.map(&:last_name)
+        should "test current scope" do
+          assert_equal [1, 3, 4, 6, 8], Assignment.current.map(&:id)
         end
 
-        # active
-        should "have a scope to find all active stores" do
-          assert_equal ["Toshniwal", "Anita", "Grand Store", "Z Store", "A Store", "All Attributes"], Employee.active.map(&:last_name)
+        should "test for_store scope" do
+          assert_equal [5, 6], Assignment.for_store(@store4.id).map(&:id)
         end
 
-        # inactive
-        should "have a scope to find all inactive stores" do
-          assert_equal ["Another Store", "Very Nice Store"], Employee.inactive.map(&:last_name)
+        should "test for_employee scope" do
+          assert_equal [5, 6], Assignment.for_employee(@employee4.id).map(&:id)
         end
 
-        should "reformat phone numbers" do
-            assert_equal "1112223334", Employee.first.phone(&:phone)
+        should "test for_pay_level scope" do
+          assert_equal [3,4,5], Assignment.for_pay_level(4).map(&:id)
         end
 
-        # younger_than_18
-        should "test younger_than_18 scope" do
-            assert_equal ["Grand Store", "Another Store", "Very Nice Store"], Employee.younger_than_18.map(&:last_name)
+        should "test by_pay_level scope" do
+            assert_equal [1, 7, 8, 2, 3, 4, 5, 6], Assignment.by_pay_level.map(&:id)
         end
 
-        # # 18 or older
-        should "test 18 or older scope" do
-            assert_equal ["Toshniwal", "Anita", "Z Store", "A Store", "All Attributes"], Employee.eighteen_or_older.map(&:last_name)
+        should "test by_store scope" do
+            assert_equal [2, 3, 4, 5, 6, 8, 7, 1], Assignment.by_store.map(&:id)
         end
 
         # regulars
-        should "test regulars scope" do
-            assert_equal ['A Store', 'All Attributes', 'Toshniwal', 'Z Store'], Employee.regulars.alphabetical.map(&:last_name)
+        should "test end previous assignments method" do
+            assert_equal "27/01/2017", Assignment.find(@assignment7.id).end_date.strftime('%d/%m/%Y')
         end
-
-        # admins
-        should "test managers scope" do
-            assert_equal ['Another Store', 'Very Nice Store'], Employee.admins.alphabetical.map(&:last_name)
-        end
-
-        # managers
-        should "test admins scope" do
-            assert_equal ['Anita', 'Grand Store'], Employee.managers.alphabetical.map(&:last_name)
-        end
-
-        # # current assignment
-        # should "" do
-        #     assert_equal
-        # end
-
-        # age
-        should "test age method" do
-            assert_equal 20, Employee.find(@employee).age
-        end
-
-        # over 18
-        should "test over_18 method" do
-            assert_equal true, Employee.find(@employee).over_18?
-            assert_equal false, Employee.find(@employee2).over_18?
-        end
-
-        # reformat ssn
-        should "reformat ssn before saving into database" do
-            assert_equal "111121234", Employee.find(@employee).ssn
-        end
-
-
-
-
-
 
     end
 

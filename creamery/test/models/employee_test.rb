@@ -58,6 +58,8 @@ class EmployeeTest < ActiveSupport::TestCase
           @employee5 = FactoryGirl.create(:employee, last_name: "Z Store")
           @employee6 = FactoryGirl.create(:employee, last_name: "A Store")
           @employee7 = FactoryGirl.create(:employee, last_name: "All Attributes", phone: '609-216-5609')
+          @store = FactoryGirl.create(:store, name: "The One")
+          @assignment = FactoryGirl.create(:assignment, store_id: @store.id, employee_id: @employee.id)
         end
         
         teardown do
@@ -69,6 +71,8 @@ class EmployeeTest < ActiveSupport::TestCase
           @employee5
           @employee6
           @employee7
+          @store
+          @assignment
         end
 
         # testing scopes
@@ -108,19 +112,19 @@ class EmployeeTest < ActiveSupport::TestCase
         end
 
         # admins
-        should "test managers scope" do
+        should "test admins scope" do
             assert_equal ['Another Store', 'Very Nice Store'], Employee.admins.alphabetical.map(&:last_name)
         end
 
         # managers
-        should "test admins scope" do
+        should "test managers scope" do
             assert_equal ['Anita', 'Grand Store'], Employee.managers.alphabetical.map(&:last_name)
         end
 
-        # # current assignment
-        # should "" do
-        #     assert_equal
-        # end
+        # current assignment
+        should "test current_assignment method" do
+            assert_equal "The One", @employee.current_assignment.store.name
+        end
 
         # age
         should "test age method" do
@@ -137,11 +141,6 @@ class EmployeeTest < ActiveSupport::TestCase
         should "reformat ssn before saving into database" do
             assert_equal "111121234", Employee.find(@employee).ssn
         end
-
-
-
-
-
 
     end
 

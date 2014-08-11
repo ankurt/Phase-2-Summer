@@ -29,7 +29,7 @@ class Employee < ActiveRecord::Base
     end
 
     def current_assignment
-        return Assignments.where('employee_id = ?',:id).current
+        return Assignment.for_employee(self.id).current.first
     end
 
     def age

@@ -24,8 +24,9 @@ FactoryGirl.define do
     store_id 1
     employee_id 1
     pay_level 1
-    
-    active true
+    start_date '27/01/2016'
+    association :employee
+    association :store
   end
 
 end
