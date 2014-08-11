@@ -19,20 +19,13 @@ FactoryGirl.define do
     active true
   end
 
- #  # factory blueprint for instructor
- #  factory :instructor do
- #    first_name "Ankur"
- #    last_name "Toshniwal"
- #    phone 1231231234
- #    active true
- #  end
-
- #  # factory blueprint for camp_instructor
- #  factory :camp_instructor do
- #  	association :instructor
- #  	association :camp
- #  	camp_id 1
- #  	instructor_id 1
- # end
+  # factory blueprint for assignment
+  factory :assignment do
+    store_id 1
+    employee_id 1
+    pay_level 1
+    
+    active true
+  end
 
 end
